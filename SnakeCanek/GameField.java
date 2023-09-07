@@ -97,7 +97,6 @@ public class GameField extends JPanel implements ActionListener {
                     Sounds.playSound("yeahoo.wav");
                     break;
             }
-            Sounds.playSound("slava.wav");
             dots++;
             createApple();
         }
