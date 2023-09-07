@@ -8,6 +8,7 @@ import java.util.Random;
 
 public class GameField extends JPanel implements ActionListener {
     Random random = new Random();
+    private int score = 3;
     private final int SIZE = 960;
     private final int DOT_SIZE = 48; // размер ячейки (в пикселях )
     private final int ALL_DOTS = 1200; // всего всего ячеек (DOT_SIZE*20)
@@ -76,6 +77,8 @@ public class GameField extends JPanel implements ActionListener {
             g.setColor(Color.WHITE);
             g.setFont(f);
             g.drawString(str, 300, SIZE / 2);
+            g.drawString("Вы набрали: " + score + " Саньков", 200, 600);
+
 
         }
     }
@@ -98,6 +101,7 @@ public class GameField extends JPanel implements ActionListener {
                     break;
             }
             dots++;
+            score++;
             createApple();
         }
     }
