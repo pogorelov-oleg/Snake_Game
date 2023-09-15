@@ -2,6 +2,7 @@ package Entity;
 
 //import java.awt.Color;  использовал для временного прямоугольника
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
@@ -13,17 +14,29 @@ public class Player extends Entity {
     GamePanel gp;
     KeyHandler keyH;
 
+    public final int screenX;
+    public final int screenY;
+
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
+
+        screenX = gp.screenWidth / 2 - (gp.tileSize / 2);
+        screenY = gp.screenHeight / 2 - (gp.tileSize / 2);
+
+        solidArea = new Rectangle();
+        solidArea.x = 14; // прямоугольник сместился на 8 слева и справа и 16 сверху
+        solidArea.y = 24; //
+        solidArea.width = 20; // 48 отняли по 14 слева и справа
+        solidArea.height = 20; //
 
         setDefaultValues();
         getPlayerImage();
     }
 
     public void setDefaultValues() {
-        x = 100;
-        y = 100;
+        worldX = gp.tileSize * 23; // начальная координата
+        worldY = gp.tileSize * 21; //
         speed = 4;
         direction = "down";
     }
@@ -37,8 +50,10 @@ public class Player extends Entity {
             down2 = ImageIO.read(getClass().getResourceAsStream("/Media/Images/Player/Walking sprites/boy_down_2.png"));
             left1 = ImageIO.read(getClass().getResourceAsStream("/Media/Images/Player/Walking sprites/boy_left_1.png"));
             left2 = ImageIO.read(getClass().getResourceAsStream("/Media/Images/Player/Walking sprites/boy_left_2.png"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("/Media/Images/Player/Walking sprites/boy_right_1.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/Media/Images/Player/Walking sprites/boy_right_2.png"));
+            right1 = ImageIO
+                    .read(getClass().getResourceAsStream("/Media/Images/Player/Walking sprites/boy_right_1.png"));
+            right2 = ImageIO
+                    .read(getClass().getResourceAsStream("/Media/Images/Player/Walking sprites/boy_right_2.png"));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,18 +65,34 @@ public class Player extends Entity {
                 || keyH.rightPressed == true) {
             if (keyH.upPressed == true) {
                 direction = "up";
-                y -= speed;
             } else if (keyH.downPressed == true) {
                 direction = "down";
-                y += speed;
             } else if (keyH.leftPressed == true) {
                 direction = "left";
-                x -= speed;
             } else if (keyH.rightPressed == true) {
                 direction = "right";
-                x += speed;
             }
 
+            // проверяем на коллизию
+            collisionOn = false;
+            gp.cChecker.checkTile(this);
+            // если collisionOn = false, игрок не может двигаться
+            if (collisionOn == false) {
+                switch (direction) {
+                    case "up":
+                        worldY -= speed;
+                        break;
+                    case "down":
+                        worldY += speed;
+                        break;
+                    case "left":
+                        worldX -= speed;
+                        break;
+                    case "right":
+                        worldX += speed;
+                        break;
+                }
+            }
             spriteCounter++; // меняет позицию каждые 10 обновлений счетчика (то есть каждые 10 кадров)
             if (spriteCounter > 10) {
                 if (spriteNum == 1) {
@@ -115,6 +146,6 @@ public class Player extends Entity {
                 }
                 break;
         }
-        g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
 }

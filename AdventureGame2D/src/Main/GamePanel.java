@@ -11,6 +11,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 public class GamePanel extends JPanel implements Runnable {
+
+    // Параметры экрана
     final int originalTileSize = 16;
     final int scale = 3;
 
@@ -20,12 +22,19 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenWidth = tileSize * maxScreenCol; // 768
     public final int screenHeight = tileSize * maxScreenRow; // 576
 
+    // Параметры мира
+    public final int maxWorldCol = 50;
+    public final int maxWorldRow = 50;
+    public final int worldWidth = tileSize * maxWorldCol;
+    public final int worldHeight = tileSize * maxWorldRow;
+
     int fPS = 60;
 
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
-    Player player = new Player(this, keyH);
+    public CollisionChecker cChecker = new CollisionChecker(this);
+    public Player player = new Player(this, keyH);
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));

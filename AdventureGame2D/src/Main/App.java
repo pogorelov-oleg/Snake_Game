@@ -1,4 +1,5 @@
 package Main;
+
 import javax.swing.JFrame;
 
 public class App {
@@ -10,12 +11,12 @@ public class App {
 
         GamePanel gamePanel = new GamePanel();
         window.add(gamePanel);
-        window.pack(); //чтобы мы могли фидеть эту панель 
+        window.pack(); // чтобы мы могли фидеть эту панель
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
         gamePanel.startGameThread();
-    
+
     }
 }
